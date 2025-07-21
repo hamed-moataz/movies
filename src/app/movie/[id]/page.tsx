@@ -1,37 +1,30 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Movie } from "@/app/_types";
-import NotFound from "@/app/NotFound";
 import { Metadata } from "next";
+import NotFound from "@/app/NotFound";
+import { getMovieByID } from "@/app/_utils/getMovieById";
 
-const getMovieByID = async (id: string): Promise<Movie | null> => {
-  const res = await fetch(`https://www.omdbapi.com/?i=${id}&apikey=303344f8`);
-  const data = await res.json();
-
-  if (data.Response === "False") return null;
-
-  return data as Movie;
-};
-
-export async function generateMetadata({
-  params,
-}: {
-  params: { id: string };
-}): Promise<Metadata> {
+export async function generateMetadata(
+  { params }: { params: { id: string } }
+): Promise<Metadata> {
   const movie = await getMovieByID(params.id);
   return {
     title: movie?.Title || "Movie Not Found",
   };
 }
-const MoviePage = async ({ params }: { params: { id: string } }) => {
-  const movie = await getMovieByID(params.id);
 
-  if (!movie) return NotFound();
+export default async function MoviePage({
+  params,
+}: {
+  params: { id: string };
+}) {
+  const movie = await getMovieByID(params.id);
+  if (!movie) return <NotFound />;
 
   return (
-    <div className="w-screen h-screen text-white bg-sky-900 flex justify-center items-center overflow-x-hidden">
+    <div className="w-screen h-auto md:h-screen text-white  bg-sky-900 flex justify-center items-center overflow-x-hidden">
       <div className=" p-10 m-auto ">
-        <div className="flex flex-col sm:flex-row items-center justify-center ">
+        <div className="flex flex-col md:flex-row items-center justify-center ">
           <div className="mx-auto w-full flex items-center justify-end  ">
             <Image
               src={movie.Poster}
@@ -82,6 +75,4 @@ const MoviePage = async ({ params }: { params: { id: string } }) => {
       </div>
     </div>
   );
-};
-
-export default MoviePage;
+}
