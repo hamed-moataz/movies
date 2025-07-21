@@ -1,7 +1,6 @@
-// app/movie/[id]/page.tsx
 import Image from "next/image";
 import Link from "next/link";
-import { Movie } from "@/app/_types";
+import { Movie, Props } from "@/app/_types";
 import NotFound from "@/app/NotFound";
 import { Metadata } from "next";
 
@@ -14,14 +13,19 @@ const getMovieByID = async (id: string): Promise<Movie | null> => {
   return data as Movie;
 };
 
-export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: {
+  params: { id: string };
+}): Promise<Metadata> {
   const movie = await getMovieByID(params.id);
   return {
     title: movie?.Title || "Movie Not Found",
   };
 }
-const MoviePage = async ({ params }: { params: { id: string } }) => {
+const MoviePage = async ({ params }: Props) => {
   const movie = await getMovieByID(params.id);
+ 
   if (!movie) return NotFound();
 
   return (
