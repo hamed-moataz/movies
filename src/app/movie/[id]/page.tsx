@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Movie, Props } from "@/app/_types";
+import { Movie } from "@/app/_types";
 import NotFound from "@/app/NotFound";
 import { Metadata } from "next";
 
@@ -23,9 +23,9 @@ export async function generateMetadata({
     title: movie?.Title || "Movie Not Found",
   };
 }
-const MoviePage = async ({ params }: Props) => {
+const MoviePage = async ({ params }: { params: { id: string } }) => {
   const movie = await getMovieByID(params.id);
- 
+
   if (!movie) return NotFound();
 
   return (

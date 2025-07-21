@@ -12,8 +12,3 @@ export type Movie = {
   Released?: string;
   Country?: string;
 };
-export interface Props {
-  params: {
-    id: string;
-  };
-}
